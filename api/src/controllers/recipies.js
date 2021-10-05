@@ -1,10 +1,11 @@
 const { Recipe, Diet, Op } = require("../db");
 const axios = require("axios");
-
-//Ordenamiento, paginado y filtrado por name
+ 
+//Función que me trae lo requrido para la ruta principal.
+//Ordenamiento, paginado y filtrado por name.
 const getRecipies = async(req, res, next) => {
     try{
-        const {
+        let {
             name,
             order,
             page
@@ -13,6 +14,8 @@ const getRecipies = async(req, res, next) => {
         let myInfo
         let allRecipesDb
         let allData = []
+        page = page ? page : 1;
+        const recipePerPage = 5;
         //#region name
         if(name && name !== ""){
             const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=4f9962859661481c85e5e8be7498795e&addRecipeInformation=true&query=${name}&number=100`)
@@ -46,13 +49,32 @@ const getRecipies = async(req, res, next) => {
         //#endregion
         
         //#region order
+        if(order === "asc" || !order || order === ""){
+            allData = allData.sort((a, b) =>{
+                return a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+            })
+        }else{
+            allData = allData.sort((a, b) =>{
+                return b.title.toLowerCase().localeCompare(a.title.toLowerCase())
+            })
+        }  
+
+
+        // if(order === "asc" || !order){ 
+        //     allData = allData.sort((a, b) => {
+        //         return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        //     })
+        // }else{
+        //     allData = allData.sort((a, b) =>{
+        //         return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+        // }  
 
         //#endregion
 
         //#region page
-
+        let result = allData.slice((recipePerPage * (page - 1)), 9) 
         //#endregion
-        return res.json(allData); 
+        return res.json(result); 
     }catch(err){
         next(err)
     }
