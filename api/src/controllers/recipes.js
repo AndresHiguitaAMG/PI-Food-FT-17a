@@ -3,7 +3,7 @@ const axios = require("axios");
  
 //Función que me trae lo requrido para la ruta principal.
 //Ordenamiento, paginado y filtrado por name.
-const getRecipies = async(req, res, next) => {
+const getRecipes = async(req, res, next) => {
     try{
         let {
             name,
@@ -15,10 +15,10 @@ const getRecipies = async(req, res, next) => {
         let allRecipesDb
         let allData = []
         page = page ? page : 1;
-        const recipePerPage = 5;
+        const recipePerPage = 9;
         //#region name
         if(name && name !== ""){
-            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=4f9962859661481c85e5e8be7498795e&addRecipeInformation=true&query=${name}&number=100`)
+            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=7d2294907ba54d318cdcee145b907a41&addRecipeInformation=true&query=${name}&number=100`)
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
@@ -35,7 +35,7 @@ const getRecipies = async(req, res, next) => {
             })
             allData = allRecipesDb.concat(myInfo)
         }else{
-            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=4f9962859661481c85e5e8be7498795e&addRecipeInformation=true&number=100")
+            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=7d2294907ba54d318cdcee145b907a41&addRecipeInformation=true&number=100")
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
@@ -71,21 +71,26 @@ const getRecipies = async(req, res, next) => {
 
         //#endregion
 
-        //#region page
-        let result = allData.slice((recipePerPage * (page - 1)), 9) 
+        //#region page                             //ej: si es page es 2 va dar 1
+        let result = allData.slice((recipePerPage * (page - 1)), (recipePerPage * (page - 1)) + recipePerPage) 
         //#endregion
-        return res.json(result); 
+        return res.json({
+            //Envío al front el resultado, lo que van a mostrar, en pocas palabras la pagina cortada
+            result: result,
+            //Resultado total
+            count: allData.length}); 
     }catch(err){
         next(err)
     }
 }
 
-const getRecipiesById = async(req, res, next) => {
+//Mi función para buscar por id, ruta detalle
+const getRecipesById = async(req, res, next) => {
     const id = req.params.id;
     if(id){
         try {
             if(!id.includes("-")){
-                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=4f9962859661481c85e5e8be7498795e`)             
+                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=7d2294907ba54d318cdcee145b907a41`)             
                     const info = {
                         image: idApi.data.image,
                         title: idApi.data.title,
@@ -123,8 +128,8 @@ const getRecipiesById = async(req, res, next) => {
         }
     }
 
-
-const postRecipies = async(req, res, next) => {
+//Mi función post, ruta de creación
+const postRecipes = async(req, res, next) => {
     const { title, summary, score, healthScore, instructions, diets } = req.body;
     let recipie = {
         title, 
@@ -179,9 +184,9 @@ const postRecipies = async(req, res, next) => {
     // res.send("Receta creada con exito")
 
 module.exports = {
-    getRecipies,
-    getRecipiesById,
-    postRecipies
+    getRecipes,
+    getRecipesById,
+    postRecipes
 }
 
 

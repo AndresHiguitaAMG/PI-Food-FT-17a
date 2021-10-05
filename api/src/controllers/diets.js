@@ -1,5 +1,6 @@
 const { Diet } = require("../db");
 
+//Mi función para las dietas
 const getDiets = async(req, res, next) => {
     try{
         const dbInfo = Diet.findAll() 
