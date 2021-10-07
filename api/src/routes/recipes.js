@@ -3,6 +3,6 @@ const { getRecipes, getRecipesById, postRecipes } = require("../controllers/reci
 
 router.get("/", getRecipes);
 router.get("/:id", getRecipesById);
-router.post("/create", postRecipes);
+router.post("/create", postRecipes); 
 
 module.exports = router;

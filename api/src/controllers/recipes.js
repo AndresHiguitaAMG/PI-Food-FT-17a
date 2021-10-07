@@ -18,7 +18,7 @@ const getRecipes = async(req, res, next) => {
         const recipePerPage = 9;
         //#region name
         if(name && name !== ""){
-            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=7d2294907ba54d318cdcee145b907a41&addRecipeInformation=true&query=${name}&number=100`)
+            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=430c2bce9a044c3eb4700a170eee13c7&addRecipeInformation=true&query=${name}&number=100`)
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
@@ -35,7 +35,7 @@ const getRecipes = async(req, res, next) => {
             })
             allData = allRecipesDb.concat(myInfo)
         }else{
-            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=7d2294907ba54d318cdcee145b907a41&addRecipeInformation=true&number=100")
+            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=430c2bce9a044c3eb4700a170eee13c7&addRecipeInformation=true&number=100")
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
@@ -90,13 +90,14 @@ const getRecipesById = async(req, res, next) => {
     if(id){
         try {
             if(!id.includes("-")){
-                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=7d2294907ba54d318cdcee145b907a41`)             
+                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=430c2bce9a044c3eb4700a170eee13c7`)             
                     const info = {
                         image: idApi.data.image,
                         title: idApi.data.title,
+                        dishTypes: idApi.data.dishTypes,
                         diets: idApi.data.diets,
-                        sumnary: idApi.data.sumnary,
-                        score: idApi.data.score,
+                        summary: idApi.data.summary,
+                        score: idApi.data.spoonacularScore,
                         healthScore: idApi.data.healthScore,
                         instructions: idApi.data.instructions  
                     }
@@ -111,9 +112,10 @@ const getRecipesById = async(req, res, next) => {
                     const recipieDb = {
                         image: Db.image,
                         title: Db.title,
+                        dishTypes: Db.dishTypes,
                         diets: Db.diets,
-                        sumnary: Db.sumnary,
-                        score: Db.score,
+                        summary: Db.summary,
+                        score: Db.spoonacularScore,
                         healthScore: Db.healthScore,
                         instructions: Db.instructions
                     }
@@ -145,6 +147,15 @@ const postRecipes = async(req, res, next) => {
     })
     .catch((err) => next(err))
 };
+
+//Para probar el paginado y el order &order=asd&page=1
+
+//Para crear una receta desde PgAmin  
+// INSERT INTO recipes (id, title, summary, instructions)
+// VALUES 
+// ('715084de-1fc8-11ec-9621-0242ac130002', 'name1', 'summary1', 'pasos1'),
+// ('88200b26-1fc8-11ec-9621-0242ac130002', 'name2', 'summary2',  'pasos2'),
+// ('91f98190-1fc8-11ec-9621-0242ac130002', 'name3', 'summary3', 'pasos3');
 
 
 
