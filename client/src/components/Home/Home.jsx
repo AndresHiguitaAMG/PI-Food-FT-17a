@@ -1,38 +1,36 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import { React, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getRecipes } from '../../actions';
+import { getRecipes, setPage } from '../../actions';
 import Card from '../Card/Card';
+import Order from '../Order/Order';
+import './Home.css';
 
 const Home = () => {
     const dispatch = useDispatch();
-    const recipes = useSelector(state => state.recipes);
-    const [page, setPage] = useState(1);
+    const { recipes, name, order, page } = useSelector(state => state);
+
     useEffect(() =>{
         dispatch(getRecipes({}))
     }, [dispatch])
 
     const handleClickPage = (page) =>{
-            dispatch(getRecipes({page}))
-            setPage(page)
+            dispatch(getRecipes({ page, name, order }))
+            dispatch(setPage(page))
     }
 
     return (
         <div>
+            <Order />
+            
             {
                 recipes?.result?.length > 0 && recipes.result.map((e) =>{
-                    return <Card image={e.image} title={e.title} diets={e.diets} key={e.id}/>
+                    return <Card image={e.image} name={e.name} diets={e.diets} key={e.id}/>
                 })
             }
 
-            <button disabled={page -1 === 0} onClick={() =>{handleClickPage(page - 1)}}>Back</button>
+            <button disabled={page - 1 === 0} onClick={() =>{handleClickPage(page - 1)}}>Back</button>
             <label>{page}</label>
             <button disabled={recipes?.count <= (page * 9)} onClick={() =>{handleClickPage(page + 1)}}>Next</button>
-
-
-            {/* <button disabled={page -1 === 0} onClick={()=> {handleClickPage(page - 1)}}>previous</button>
-                    <label>{page}</label>
-                <button disabled={recipes?.count <= (page * 9)} onClick={()=>{handleClickPage(page + 1)}}>next</button> */}
         </div>
     );
 }

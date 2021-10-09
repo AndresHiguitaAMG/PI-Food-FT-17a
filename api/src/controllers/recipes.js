@@ -2,7 +2,7 @@ const { Recipe, Diet, Op } = require("../db");
 const axios = require("axios");
  
 //Función que me trae lo requrido para la ruta principal.
-//Ordenamiento, paginado y filtrado por name.
+//Ordenamiento, paginado y filtrado por name.  
 const getRecipes = async(req, res, next) => {
     try{
         let {
@@ -16,30 +16,30 @@ const getRecipes = async(req, res, next) => {
         let allData = []
         page = page ? page : 1;
         const recipePerPage = 9;
-        //#region name
-        if(name && name !== ""){
-            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=430c2bce9a044c3eb4700a170eee13c7&addRecipeInformation=true&query=${name}&number=100`)
+        //#region name 
+        if(name && name !== ""){ // 
+            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=d2f232c78a264b11b38837bb3f1aaa2c&addRecipeInformation=true&query=${name}&number=100`)
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
-                    title: el.title,
+                    name: el.title,
                     diets: el.diets
                 }
             }) 
             allRecipesDb = await Recipe.findAll({
                 where:{
-                    title:{
+                    name:{ //ojo
                         [Op.iLike]: `%${name}%` 
                     }
                 }
             })
             allData = allRecipesDb.concat(myInfo)
         }else{
-            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=430c2bce9a044c3eb4700a170eee13c7&addRecipeInformation=true&number=100")
+            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=d2f232c78a264b11b38837bb3f1aaa2c&addRecipeInformation=true&number=100")
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
-                    title: el.title,
+                    name: el.title,
                     diets: el.diets
                 }
             }) 
@@ -51,13 +51,13 @@ const getRecipes = async(req, res, next) => {
         //#region order
         if(order === "asc" || !order || order === ""){
             allData = allData.sort((a, b) =>{
-                return a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+                return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
             })
         }else{
             allData = allData.sort((a, b) =>{
-                return b.title.toLowerCase().localeCompare(a.title.toLowerCase())
-            })
-        }  
+                return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+            }) 
+        }   
 
 
         // if(order === "asc" || !order){ 
@@ -90,10 +90,10 @@ const getRecipesById = async(req, res, next) => {
     if(id){
         try {
             if(!id.includes("-")){
-                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=430c2bce9a044c3eb4700a170eee13c7`)             
+                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=d2f232c78a264b11b38837bb3f1aaa2c`)             
                     const info = {
                         image: idApi.data.image,
-                        title: idApi.data.title,
+                        name: idApi.data.title,
                         dishTypes: idApi.data.dishTypes,
                         diets: idApi.data.diets,
                         summary: idApi.data.summary,
@@ -111,7 +111,7 @@ const getRecipesById = async(req, res, next) => {
                     })
                     const recipieDb = {
                         image: Db.image,
-                        title: Db.title,
+                        name: Db.title,
                         dishTypes: Db.dishTypes,
                         diets: Db.diets,
                         summary: Db.summary,
@@ -128,13 +128,13 @@ const getRecipesById = async(req, res, next) => {
                 return res.status(400).send({message: "No se pudo procesar su solicitud"})
             }
         }
-    }
+    } 
 
 //Mi función post, ruta de creación
 const postRecipes = async(req, res, next) => {
-    const { title, summary, score, healthScore, instructions, diets } = req.body;
+    const { name, summary, score, healthScore, instructions, diets } = req.body;
     let recipie = {
-        title, 
+        name, 
         summary, 
         score, 
         healthScore, 
@@ -194,6 +194,8 @@ const postRecipes = async(req, res, next) => {
     // recipieCreated.addDiet(dietsDb)
     // res.send("Receta creada con exito")
 
+    
+    //Api Key de respaldo; 9996e0bf1e1a4619a2b8ea70d569d4e2, bd3e698405694cb0b432069507533f26, e16d3c55137f44619f594e09eafac924, dcff187f29484cbbb733200386ce3ce3, e10fe56e7a0d47bcb9d7d89920042c7a, 88354d401c3049a5b30a5a022eebf8bd
 module.exports = {
     getRecipes,
     getRecipesById,
