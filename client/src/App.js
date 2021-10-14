@@ -7,14 +7,18 @@ import {
 import LandingPage from './components/LandingPage/LandingPage';
 import Home from './components/Home/Home';
 import NavBar from './components/NavBar/NavBar';
-// import Formulario from './components/Formulario/Fomulario'
+import Detail from './components/Detail/Detail';
+import Form from './components/Form/Form'
+
 function App() {
   return (
     <div className="App">
       <Route exact path="/" component={LandingPage} />
       <Route path="/home" component={NavBar} /> 
       <Route exact path="/home" component={Home} />
-      {/* <Route path="/" component={Formulario} /> */}
+      <Route path="/detail" component={NavBar} />
+      <Route path="/detail/:id" component={Detail} />
+      <Route path="/home/create" component={Form} />
     </div>
   );
 }

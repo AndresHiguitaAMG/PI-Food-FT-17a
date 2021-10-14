@@ -1,8 +1,16 @@
-import { GET_RECIPES, SET_NAME, SET_PAGE, SET_ORDER} from '../actions/index';
+import { 
+    GET_RECIPES, 
+    SET_NAME, 
+    SET_PAGE, SET_ORDER, 
+    GET_RECIPES_BY_ID, 
+    REMOVE_RECIPE, 
+    GET_DIETS,
+    // POST_RECIPES
+} from '../actions/index';
 
 const initialState = {
     recipes: [],
-    recipe: {},
+    recipe: [],
     diets: [],
     name: "",
     order: "",
@@ -16,6 +24,12 @@ export default function reducer(state = initialState, { type, payload }){
                 ...state,
                 recipes: payload
             }
+            case GET_RECIPES_BY_ID:
+                return{
+                    ...state,
+                    recipe: payload
+                }
+                
 
             case SET_NAME:
             return{
@@ -34,6 +48,23 @@ export default function reducer(state = initialState, { type, payload }){
                     ...state,
                     order: payload
                 }
+
+                case REMOVE_RECIPE:
+                    return{
+                        ...state,
+                        recipe: payload
+                    }
+                
+                case GET_DIETS:
+                    return{
+                        ...state,
+                        diets: payload
+                    }
+                
+                // case POST_RECIPES:
+                //     return{
+                //         ...state
+                //     }
             
             default:
                 return state;

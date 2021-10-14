@@ -2,6 +2,7 @@ import { React, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getRecipes, setPage } from '../../actions';
 import Card from '../Card/Card';
+import Search from '../Searc/Search';
 import Order from '../Order/Order';
 import './Home.css';
 
@@ -20,11 +21,15 @@ const Home = () => {
 
     return (
         <div>
+            
+            <Search />
+
             <Order />
             
             {
+                
                 recipes?.result?.length > 0 && recipes.result.map((e) =>{
-                    return <Card image={e.image} name={e.name} diets={e.diets} key={e.id}/>
+                    return <Card image={e.image} name={e.name} diets={e.diets} id={e.id} key={e.id}/>
                 })
             }
 

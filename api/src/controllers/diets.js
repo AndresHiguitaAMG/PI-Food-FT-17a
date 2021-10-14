@@ -3,7 +3,7 @@ const { Diet } = require("../db");
 //Mi función para las dietas
 const getDiets = async(req, res, next) => {
     try{
-        const dbInfo = Diet.findAll() 
+        const dbInfo = await Diet.findAll()  
         if(dbInfo.length)
         return res.status(200).json(dbInfo)
         else{

@@ -1,8 +1,8 @@
 const { Recipe, Diet, Op } = require("../db");
 const axios = require("axios");
  
-//Función que me trae lo requrido para la ruta principal.
-//Ordenamiento, paginado y filtrado por name.  
+//Función que me trae lo requrido para la ruta principal.  
+//Ordenamiento, paginado y filtrado por name.   
 const getRecipes = async(req, res, next) => {
     try{
         let {
@@ -18,7 +18,7 @@ const getRecipes = async(req, res, next) => {
         const recipePerPage = 9;
         //#region name 
         if(name && name !== ""){ // 
-            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=d2f232c78a264b11b38837bb3f1aaa2c&addRecipeInformation=true&query=${name}&number=100`)
+            const allRecipesApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=5616593d87bb417abf9ee23a7d64f0bc&addRecipeInformation=true&query=${name}&number=100`)
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
@@ -35,15 +35,16 @@ const getRecipes = async(req, res, next) => {
             })
             allData = allRecipesDb.concat(myInfo)
         }else{
-            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=d2f232c78a264b11b38837bb3f1aaa2c&addRecipeInformation=true&number=100")
+            const allRecipesApi = await axios.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=5616593d87bb417abf9ee23a7d64f0bc&addRecipeInformation=true&number=100")
             myInfo = await allRecipesApi.data.results.map(el => {
                 return {
                     image: el.image,
                     name: el.title,
-                    diets: el.diets
+                    diets: el.diets,
+                    id: el.id 
                 }
             }) 
-            allRecipesDb = await Recipe.findAll({include: Diet})
+            allRecipesDb = await Recipe.findAll({include: [Diet]})
             allData = allRecipesDb.concat(myInfo)
         }
         //#endregion
@@ -85,12 +86,12 @@ const getRecipes = async(req, res, next) => {
 }
 
 //Mi función para buscar por id, ruta detalle
-const getRecipesById = async(req, res, next) => {
+const getRecipesById = async(req, res, next) => { 
     const id = req.params.id;
     if(id){
         try {
             if(!id.includes("-")){
-                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=d2f232c78a264b11b38837bb3f1aaa2c`)             
+                const idApi = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=5616593d87bb417abf9ee23a7d64f0bc`)             
                     const info = {
                         image: idApi.data.image,
                         name: idApi.data.title,
@@ -99,7 +100,7 @@ const getRecipesById = async(req, res, next) => {
                         summary: idApi.data.summary,
                         score: idApi.data.spoonacularScore,
                         healthScore: idApi.data.healthScore,
-                        instructions: idApi.data.instructions  
+                        instructions: idApi.data.instructions   
                     }
                     res.json(info)
                 }else{
@@ -132,21 +133,44 @@ const getRecipesById = async(req, res, next) => {
 
 //Mi función post, ruta de creación
 const postRecipes = async(req, res, next) => {
-    const { name, summary, score, healthScore, instructions, diets } = req.body;
-    let recipie = {
-        name, 
-        summary, 
-        score, 
-        healthScore, 
-        instructions, 
-    }
-    Recipe.create(recipie)
-    .then(recipie => {
-        recipie.addDiet(diets)
-        res.json({...recipie, diets})
-    })
-    .catch((err) => next(err))
-};
+    try{
+        const { name, summary, spoonacularScore, healthScore, instructions, diets} = req.body;
+        let createRecipe = await Recipe.create({
+            
+            image: "https://cdn.imusa.com.co/resources/2016/12/Slide-34jpg.jpg",
+            name, 
+            summary, 
+            spoonacularScore: parseFloat(spoonacularScore), 
+            healthScore: parseFloat(healthScore), 
+            instructions
+        })
+        const dietsDb = await Diet.findAll({where: {name: diets}})
+        await createRecipe.addDiets(dietsDb) //Linkeo, siempre prural
+        return res.status(200).send("Creado con exito")
+    }catch(err){
+        next(err)
+    };
+}
+
+
+
+
+// const postRecipes = async(req, res, next) => {
+//     const { name, summary, score, healthScore, instructions, diets } = req.body;
+//     let recipie = {
+//         name, 
+//         summary, 
+//         score, 
+//         healthScore, 
+//         instructions, 
+//     }
+//     Recipe.create(recipie)
+//     .then(recipie => {
+//         recipie.addDiet(diets)
+//         res.json({...recipie, diets})
+//     })
+//     .catch((err) => next(err))
+// };
 
 //Para probar el paginado y el order &order=asd&page=1
 

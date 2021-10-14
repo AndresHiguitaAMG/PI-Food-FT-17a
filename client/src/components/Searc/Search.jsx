@@ -18,8 +18,16 @@ function Search() {
         dispatch(getRecipes({page: 1, name: input})) //Y aquí hago la consulta como tal, pasandole el name y el input
         dispatch(setPage(1)) //Ya hice mi busqueda pero ahora seteo la pagina en 1
         setInput("")
-        console.log(input)
+        // if(getRecipes !== null){
+        //     return "Not fount"
+        // }
     }
+
+    // useEffect(() => {
+    //     if(setInput() === null){
+    //         return "Not found" 
+    //     }
+    // }, [setInput]) //prueba
     
     return (
         <form >
