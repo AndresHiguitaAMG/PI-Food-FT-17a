@@ -5,7 +5,7 @@ const getDiets = async(req, res, next) => {
     try{
         const dbInfo = await Diet.findAll()  
         if(dbInfo.length)
-        return res.status(200).json(dbInfo)
+        return res.status(200).json(dbInfo.map(el => el.name))
         else{
             return res.status(400).json({message: "No se pudo procesar su solicitud"})
         }

@@ -1,0 +1,121 @@
+// import { React, useEffect, useState } from 'react';
+// import { useSelector, useDispatch } from 'react-redux'
+// import { getRecipes, setPage } from '../../actions';
+// import Card from '../Card/Card';
+// import Search from '../Searc/Search';
+// import Order from '../Order/Order';
+// import './Home.css';
+// import Page from '../Page/Page';
+
+
+// const Home = () => {
+//     const dispatch = useDispatch();
+//     const allRecipes = useSelector((state) => state.recipes);
+//     const { name, order } = useSelector(state => state);
+//      //Pagina actual y una const para setear la pagina actual en 1 que es desde donde arranca
+//     const [ currentPage, setCurrentPage ] = useState(1);
+//     //Cuantas recetas quiero por pagina
+//     const [ recipesPerPage, setRecipesPerPage ] = useState(9);
+//     //indexOfLastRecipe igual a la pagina actual por la cantidad de recetas por pagina
+//     const indexOfLastRecipe = currentPage * recipesPerPage;
+//     //El inidice del primer personaje va a ser igual al indice del ultimo personaje por 
+//     //pagina menos la cantidad de recetas por pagina
+//     const indexOfFirtsRecipe = indexOfLastRecipe - recipesPerPage;
+//     const currentRecipe = allRecipes.slice(indexOfFirtsRecipe, indexOfLastRecipe);
+
+//     const page = (pageNumber) =>{
+//         setCurrentPage(pageNumber)
+//     }
+
+
+
+//     useEffect(() =>{
+//         dispatch(getRecipes({}))
+//     }, [dispatch])
+
+//     const handleClickPage = (page) =>{
+//             dispatch(getRecipes({ name, order }))
+//             dispatch(setPage(page))
+//     }
+
+//     const handleonClickLoad = (e) =>{
+//         e.preventDefault(); //Evita que se recargue la pagina y se rompa
+//         dispatch(getRecipes({name}))
+//         dispatch(setPage(page))
+//     }
+
+//     return (
+
+//         <div>
+            
+//             <button onClick={(e) => handleonClickLoad(e)}>Load recipes</button>
+
+//             <Search />
+
+//             <Order />
+
+//             <Page
+//             recipePerPage={recipesPerPage}
+//             recipes={allRecipes.length}
+//             page={page}
+//             />
+            
+//             {
+                
+//                 currentRecipe?.result?.length > 0 && currentRecipe.result.map((e) =>{
+//                     return <Card image={e.image} name={e.name} diets={e.diets} id={e.id} key={e.id}/>
+//                 })
+//             }
+
+//             {/* <button disabled={page - 1 === 0} onClick={() =>{handleClickPage(page - 1)}}>Back</button>
+//             <label>{page}</label>
+//             <button disabled={recipes?.count <= (page * 9)} onClick={() =>{handleClickPage(page + 1)}}>Next</button> */}
+//         </div>
+//     );
+// }
+ 
+// export default Home;
+
+
+
+
+// import { React, useEffect } from 'react';
+// import { useSelector, useDispatch } from 'react-redux'
+// import { getRecipes } from '../../actions';
+// import Card from '../Card/Card';
+// import Search from '../Searc/Search';
+// import Order from '../Order/Order';
+// import './Home.css';
+
+// const Home = () => {
+// const dispatch = useDispatch() 
+// const  recipes  = useSelector((state) => state);
+
+// useEffect(() =>{
+//     dispatch(getRecipes())
+// }, [dispatch])
+
+// // const handleonClickLoad = (e) =>{
+// //             e.preventDefault(); //Evita que se recargue la pagina y se rompa
+// //             dispatch(getRecipes({name}))
+// //     //         dispatch(setPage(page))
+// //         }
+
+//     return (
+//         <div>
+//             {/* <button onClick={(e) => handleonClickLoad(e)}>Load recipes</button> */}
+//             <Search />
+            
+//             <Order />
+
+//             {
+//             recipes?.result?.length > 0 && recipes.result.map((e) =>{
+//                                         return <Card image={e.image} name={e.name} diets={e.diets} id={e.id} key={e.id}/>
+//                                     })
+//             }
+
+//         </div>
+//     );
+// }
+ 
+// export default Home;

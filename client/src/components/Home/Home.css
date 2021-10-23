@@ -1,4 +1,5 @@
-body{
-    background-color: #FA8072
-    ;
+.recipes{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
 }

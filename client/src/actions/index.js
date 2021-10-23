@@ -7,18 +7,24 @@ export const GET_RECIPES_BY_ID = "GET_RECIPES_BY_ID";
 export const REMOVE_RECIPE = "REMOVE_RECIPE";
 export const GET_DIETS = "GET_DIETS";
 export const POST_RECIPES = "POST_RECIPES";
+export const FILTER_BY_DIET = "FILTER_BY_DIET";
+export const ORDER_BY_SCORE = "ORDER_BY_SCORE";
 
+// Asi lo harìa si trajera el page, order y name desde el back
+// var allData = await axios.get(`http://localhost:3001/recipes?page=${page ? page : 1}&order=${order ? order : ""}&name=${name ? name : ""}`);
 export function getRecipes({name, order, page}){
     return async function(dispatch){
         try{
-            var allData = await axios.get(`http://localhost:3001/recipes?page=${page ? page : 1}&order=${order ? order : ""}&name=${name ? name : ""}`);
-            return dispatch({
-                type: GET_RECIPES,
-                payload: allData.data
-            })
+            return axios.get(`http://localhost:3001/recipes?page=${page ? page : 1}&order=${order ? order : ""}&name=${name ? name : ""}`)
+                .then(response =>{
+                    dispatch({
+                        type: GET_RECIPES,
+                        payload: response.data
+                    })
+                })
         }catch(err){
             console.log(err);
-        }
+        } 
     } 
 }
 
@@ -90,6 +96,23 @@ export function postRecipes(payload){
         }
     }
 }
+
+export function filterByDiet(diets){
+    return{
+        type: FILTER_BY_DIET,
+        payload: diets
+    }       
+}
+
+export function orderByScore(score){
+    return{
+        type: ORDER_BY_SCORE,
+        payload: score
+    }       
+}
+
+
+
 
 
 

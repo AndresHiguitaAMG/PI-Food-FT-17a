@@ -35,7 +35,7 @@ function Form() {
     })
     
     useEffect(() =>{
-        dispatch(getDiets())
+        dispatch(getDiets()) //Cuando el componente se monta despacho la acción de dietas
     }, [dispatch])
 
     const handleOnSubmit = (e) =>{
@@ -66,11 +66,20 @@ function Form() {
     }
 
     const handleSelect = (e) =>{
+        const select = input.diets.find(el => el === e.target.value)
+        if(select) return 
         setInput({
             ...input,
             diets: [...input.diets, e.target.value]
         })
     }
+
+    // const handleDelete = (e) =>{
+    //     setInput({
+    //         ...input,
+    //         diets: input.diets.filter(el => el !== e)
+    //     })
+    // }
 
     
 
@@ -151,7 +160,7 @@ function Form() {
             <select onChange={(e) => handleSelect(e)}>
             <option value=''> -- Select diet --</option>
             {diets.map(el => ( 
-                        <option value={el.name}>{el.name}</option>
+                        <option value={el}>{el}</option>
                     ))}
             </select>
             
@@ -161,6 +170,13 @@ function Form() {
 
             <button type="submit">Create</button>
         </form>
+        {/* {
+        input.diets.map(e =>
+        <div className="divOcc">
+            <p>{e}</p>
+            <button className="buttonX" onClick={() => handleDelete(e)}>X</button>
+            </div>
+            )}  */}
         </div>
     )
 }

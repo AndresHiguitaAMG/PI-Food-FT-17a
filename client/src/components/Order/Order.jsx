@@ -12,8 +12,10 @@ function Order() {
     }
     return (
         <div>
+            <span>Order By Name: </span>
             <select onChange={HandleChangeSelect}>
-                <option selected value="asc">Ascendente</option>
+                <option selected value=''> -- Select --</option>
+                <option value="asc">Ascendente</option>
                 <option value="desc">Descendente</option>
             </select>
         </div>

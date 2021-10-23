@@ -2,6 +2,7 @@ import { React, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router'
 import { getRecipesById, removeRecipe } from '../../actions';
+import "../Home/Home.css"
 
 function Detail(props) {
     
@@ -28,13 +29,18 @@ const goToBack = ()=>{
 
                 recipe?.name ? 
                 <>
-                    <img src={recipe.image} alt="img not found" width="400px" heigth="290px"/>
-                    <p>{recipe.name}</p>
+                <div className="recipes">
+                
+                <div><img src={recipe.image} alt="img not found" width="400px" heigth="290px"/></div>
+                   <div>
                     <p>{recipe.dishTypes}</p>
                     {/* <p>{recipe.diets}</p>  */}
                     <p dangerouslySetInnerHTML={{__html: recipe.summary,}}/>
+                    <p>{recipe.score}</p>
                     <p>{recipe.healthScore}</p>
                     <p>{recipe.instructions}</p>
+                    </div>
+                    </div>
                 </>
                 :
                 <div>Cargando...</div>

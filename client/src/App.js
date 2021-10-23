@@ -9,6 +9,7 @@ import Home from './components/Home/Home';
 import NavBar from './components/NavBar/NavBar';
 import Detail from './components/Detail/Detail';
 import Form from './components/Form/Form'
+// import FilterByDiets from './components/FilterByDiets/FilterByDiets';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/detail" component={NavBar} />
       <Route path="/detail/:id" component={Detail} />
       <Route path="/home/create" component={Form} />
+      {/* <route path="/home" component={FilterByDiets} /> */}
     </div>
   );
 }
